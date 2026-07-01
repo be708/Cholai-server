@@ -4,7 +4,7 @@ import os
 from difflib import get_close_matches
 from datetime import datetime
 
-app = Flask(_name_)
+app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "cholai_secret_key_change_me") # Change this on Render
 
 CSV_PATH = 'data.csv'
@@ -182,5 +182,5 @@ def admin():
         return render_template_string(BASE_HTML, page='admin_login')
     return render_template_string(BASE_HTML, page='admin', logs=CHAT_LOGS)
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
