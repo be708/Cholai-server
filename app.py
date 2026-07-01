@@ -1,5 +1,5 @@
-[6:39 PM, 7/1/2026] +675 8151 7545: from flask import Flask, request, jsonify, render_template_string, session, redirect, url_for
-import pandas as pd
+from flask import Flask, request, jsonify, render_template_string, session, redirect, url_for
+#import pandas as pd
 import os
 from difflib import get_close_matches
 from datetime import datetime
@@ -11,15 +11,16 @@ CSV_PATH = 'data.csv'
 ADMIN_LINK = 'cholai-admin-7749' # This is your private link. Don’t share it.
 ADMIN_PASS = os.environ.get("ADMIN_PASS", "Beverlyn2026") # Set this in Render ENV VARS
 
-# Load dataset once at startup
-try:
-    df = pd.read_csv(CSV_PATH, encoding='utf-8')
-    df['question'] = df['question'].astype(str).str.lower().str.strip()
-    QUESTIONS = df['question'].tolist()
-    print(f"Cholai loaded: {len(df)} Q&A")
-except Exception as e:
-    print(f"ERROR loading CSV: {e}")
-    df = pd.DataFrame(columns=['question','answer','tags'])
+# Load dataset - DISABLED FOR TRIAL V1.0 NO pandas.
+QUESTIONS = [
+    
+    "em i stap",
+    "yu orait",
+    "tenkyu tru",
+    "cholai em wanem"
+]
+print(f"Cholai loaded: {len(QUESTIONS)} Q&A for trial")
+    
 
 # In-memory logs. For PNG scale this is ok. Later we add database.
 CHAT_LOGS = [] # [time, ip, question, answer]
