@@ -147,7 +147,7 @@ BASE_HTML = """
 @app.route('/', methods=['GET'])
 def home():
     session.setdefault('messages', [])
-    faq = df[df['tags']=='general']['question'].head(6).tolist() if 'tags' in df.columns else QUESTIONS[:6]
+    faq = QUESTIONS[:6] # Trial mode. No pandas, no df
     return render_template_string(BASE_HTML, page='chat', messages=session['messages'], faq=faq, admin_link=ADMIN_LINK, last_answer=session.get('last_answer'))
 
 @app.route('/chat', methods=['POST'])
