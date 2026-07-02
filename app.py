@@ -26,13 +26,14 @@ print(f"Cholai loaded: {len(QUESTIONS)} Q&A for trial")
 CHAT_LOGS = [] # [time, ip, question, answer]
 
 def find_answer(user_q):
-    user_q = str(user_q).lower().strip()
-    if not user_q: return "Susa, askim wanpla samting pastaim bestie."
-
-    # Exact match first
-    if user_q in QUESTIONS:
-        return df[df['question'] == user_q]['answer'].iloc[0]
-
+    q = user_q.lower().strip() #
+    if not user_q:
+        return "Raitim askim blo yu kam, Bestie traim 'em i stap'"
+    for qa in QUESTIONS:
+        if qa['question'].lower() in q or q in qa['question'].lower():
+            return qa['answer']
+    return "Sori Bestie. Mi no save yet. traim 'Em i stap' o 'yu orait'."
+  
     # Fuzzy match for Tokpisin typos: "wanem" vs "wanem?"
     matches = get_close_matches(user_q, QUESTIONS, n=1, cutoff=0.75)
     if matches:
