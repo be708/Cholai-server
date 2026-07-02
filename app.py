@@ -1,38 +1,60 @@
-from flask import Flask, request, jsonify, render_template
-from difflib import get_close_matches
-import pandas as pd
 import os
+import pandas as pd
+from flask import Flask, request, jsonify, render_template_string
+from difflib import get_close_matches
 
-app = Flask(_name_)
+app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "cholai_secret_key_change_me") # Change this on Render
 
-# LOAD CSV - THIS IS THE FULL DATASET MODE
-CSV_PATH = 'cholai_qa.csv'
-df = pd.read_csv(CSV_PATH)
-QA_LIST = df.to_dict('records')
-print(f"Cholai loaded: {len(QA_LIST)} Q&A from CSV")
+# CONFIG
+CSV_PATH = "cholai_qa.csv" # Must match your file name in repo ✅
+ADMIN_LINK = "cholai-admin-7749" # This is your private link. Don't share it.
+ADMIN_PASS = os.environ.get("ADMIN_PASS", "Reverlyn2026") # Set this in Render ENV VARS
 
-def find_answer(user_q):
-    user_q = user_q.lower().strip()
-    questions = [qa['question'].lower() for qa in QA_LIST]
-    matches = get_close_matches(user_q, questions, n=1, cutoff=0.6)
+# LOAD DATASET ONCE WHEN APP STARTS
+try:
+    df = pd.read_csv(CSV_PATH)
+    QUESTIONS = df.to_dict('records') # Converts CSV to list of dicts
+    print(f"Cholai loaded: {len(QUESTIONS)} Q&A from CSV ✅")
+except Exception as e:
+    print(f"ERROR loading CSV: {e}")
+    QUESTIONS = [] # Fallback so app doesn't crash
+
+def get_best_answer(user_q):
+    """Find closest match from CSV using difflib"""
+    if not QUESTIONS:
+        return "Sorry Bestie, my brain CSV isn't loaded yet 😭"
+    
+    questions_only = [q['question'] for q in QUESTIONS]
+    matches = get_close_matches(user_q.lower(), questions_only, n=1, cutoff=0.6)
+    
     if matches:
-        best_q = matches[0]
-        for qa in QA_LIST:
-            if qa['question'].lower() == best_q:
-                return qa['answer']
-    return "Mi no save yet Bestie. Trai narapela tok"
+        best_match = matches[0]
+        for q in QUESTIONS:
+            if q['question'] == best_match:
+                return q['answer']
+    return "I don't have that yet Bestie. Ask me something else or tell the admin to add it 💬"
 
-@app.route('/')
+# ROUTES
+@app.route("/")
 def home():
-    return render_template('index.html')
+    return render_template_string("""
+    <h1>Cholai Bot is Live ✅</h1>
+    <p>POST to /ask with json: {"question": "your question"}</p>
+    """)
 
-@app.route('/chat', methods=['POST'])
-def chat():
+@app.route("/ask", methods=["POST"])
+def ask():
     data = request.get_json()
-    user_message = data.get('message', '')
-    answer = find_answer(user_message)
-    return jsonify({'answer': answer})
+    user_q = data.get("question", "")
+    answer = get_best_answer(user_q)
+    return jsonify({"answer": answer})
 
-if _name_ == "_main_":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+@app.route(f"/{ADMIN_LINK}", methods=["GET", "POST"])
+def admin():
+    # Add your admin logic here later
+    return "Admin panel. Set ADMIN_PASS in Render."
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000)) # Render requires this
+    app.run(host="0.0.0.0", port=port, debug=False) # 0.0.0.0 is required for Render
