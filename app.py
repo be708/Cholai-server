@@ -56,5 +56,5 @@ def admin():
     return "Admin panel. Set ADMIN_PASS in Render."
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000)) # Render requires this
+    port = int(os.environ.get("PORT", 5000)) # Render requires this
     app.run(host="0.0.0.0", port=port, debug=False) # 0.0.0.0 is required for Render
