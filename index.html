@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cholai AI - PNG Tokpisin</title>
+<style>
+:root{
+  --bg: #000;        /* BLACK background */
+  --gold: #FFD700;      /* GOLD text */
+  --maroon: #800000;    /* MAROON RED buttons */
+  --maroon-hover: #A00000;
+  --card: #111;      /* DARK card bg */
+}
+
+body{
+  background: var(--bg); 
+  color: var(--gold); 
+  font-family: 'Segoe UI', sans-serif; 
+  margin:0; 
+  padding:0;
+}
+
+.container{
+  max-width:700px; 
+  margin:0 auto; 
+  padding:20px;
+}
+
+h1{
+  color:var(--gold); 
+  text-align:center;
+}
+
+.chat-box{
+  background:var(--card); 
+  border:1px solid var(--gold); 
+  border-radius:12px; 
+  padding:15px; 
+  min-height:300px; 
+  margin-bottom:15px; 
+  overflow-y:auto;
+}
+
+.msg-user{
+  text-align:right; 
+  margin:8px 0; 
+  color:var(--gold);
+}
+
+.msg-bot{
+  text-align:left; 
+  margin:8px 0; 
+  color:var(--gold);
+}
+
+input[type=text]{
+  width:70%; 
+  padding:12px; 
+  border-radius:8px; 
+  border:1px solid var(--gold); 
+  background:#000; 
+  color:var(--gold); 
+  outline:none;
+}
+
+button{
+  background:var(--maroon); /* MAROON BUTTON */
+  color:var(--gold); 
+  border:none; 
+  padding:12px 18px; 
+  border-radius:8px; 
+  cursor:pointer; 
+  font-weight:bold;
+}
+button:hover{
+  background:var(--maroon-hover); /* BRIGHTER MAROON ON HOVER */
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Cholai AI 💚</h1>
+  <div class="chat-box" id="chatBox"></div>
+  <input type="text" id="userInput" placeholder="Tokim mi samting...">
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+async function sendMessage(){
+  const input = document.getElementById('userInput');
+  const chatBox = document.getElementById('chatBox');
+  const msg = input.value.trim();
+  if(!msg) return;
+  
+  chatBox.innerHTML += <div class="msg-user">Yu: ${msg}</div>;
+  input.value = '';
+  
+  const res = await fetch('/chat', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({message: msg})
+  });
+  const data = await res.json();
+  chatBox.innerHTML += <div class="msg-bot">Cholai: ${data.answer}</div>;
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+document.getElementById('userInput').addEventListener('keypress', e => {if(e.key==='Enter') sendMessage()});
+</script>
+</body>
+</html>
