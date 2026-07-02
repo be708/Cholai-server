@@ -149,6 +149,16 @@ def home():
     session.setdefault('messages', [])
     faq = QUESTIONS[:6] # Trial mode. No pandas, no df
     return render_template_string(BASE_HTML, page='chat', messages=session['messages'], faq=faq, admin_link=ADMIN_LINK, last_answer=session.get('last_answer'))
+def find_answer(q):
+    q = q.lower().strip()
+    if not q:
+        return "Raitim askim kam, Bestie Try 'em i stap'"
+    for qa in QUESTIONS: #
+            if qa['question'].lower() in q or q in qa['question'].lower():
+                return qa['answer']
+    return "Sori Bestie. Mi no save yet. traim 'Em i stap' o 'yu orait'."
+
+
 
 @app.route('/chat', methods=['POST'])
 def chat():
