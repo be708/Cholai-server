@@ -25,14 +25,14 @@ def get_best_answer(user_q):
     if not QUESTIONS:
         return "Sorry Bestie, my brain CSV isn't loaded yet 😭"
     
-    questions_only = [q['question'] for q in QUESTIONS]
+    questions_only = [q.get['question', ''] for q in QUESTIONS if q.get('question')]
     matches = get_close_matches(user_q.lower(), questions_only, n=1, cutoff=0.6)
     
     if matches:
         best_match = matches[0]
         for q in QUESTIONS:
-            if q['question'] == best_match:
-                return q['answer']
+            if q.get('question', '').lower()  == best_match:
+                return q.get('answer',"I don't have that yet Bestie. Ask me something else or tell the admin to add it 💬" 
     return "I don't have that yet Bestie. Ask me something else or tell the admin to add it 💬"
 
 # ROUTES
