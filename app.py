@@ -34,13 +34,6 @@ def find_answer(user_q):
             return qa['answer']
     return "Sori Bestie. Mi no save yet. traim 'Em i stap' o 'yu orait'."
   
-    # Fuzzy match for Tokpisin typos: "wanem" vs "wanem?"
-    matches = get_close_matches(user_q, QUESTIONS, n=1, cutoff=0.75)
-    if matches:
-        return df[df['question'] == matches[0]]['answer'].iloc[0]
-
-    return "Susa, mi no gat ansar lo dispela yet. Traim narapla askim o tok 'Halo'."
-
 # === HTML TEMPLATE WITH STYLING ===
 BASE_HTML = """
 <!DOCTYPE html>
