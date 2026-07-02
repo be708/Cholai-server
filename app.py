@@ -13,8 +13,8 @@ ADMIN_PASS = os.environ.get("ADMIN_PASS", "Beverlyn2026") # Set this in Render E
 
 # Load dataset - DISABLED FOR TRIAL V1.0 NO pandas.
 QUESTIONS = [
-    {'question': 'em i stap', 'answer':'mi stap ya Bestie. Yu orait?}
-    {'question': 'yu orait', 'answer': Mi orait tumas, Tenkyu, Na yu?}
+    {'question': 'em i stap', 'answer':'mi stap ya Bestie. Yu orait'}
+    {'question': 'yu orait', 'answer': Mi orait tumas, Tenkyu, Na yu'}
     {'question': 'tenkyu tru','answer': 'Yu welkam Bestie'}
     {'question': 'Cholai em wanem', 'answer': 'Mi Cholai AI. PNG AI assistant blo yu.'} 
     ]
